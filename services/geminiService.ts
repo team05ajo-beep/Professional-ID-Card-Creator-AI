@@ -6,8 +6,9 @@ export const generateProfessionalPhoto = async (
   base64Image: string, 
   profession: ProfessionType = ProfessionType.CORPORATE_MALE
 ): Promise<string | null> => {
-  // Inisialisasi langsung sesuai instruksi SDK terbaru
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  // Pastikan API_KEY tersedia, jika tidak ada kirim string kosong agar SDK tidak crash saat init
+  const apiKey = process.env.API_KEY || "";
+  const ai = new GoogleGenAI({ apiKey });
   
   const parts = base64Image.split(',');
   if (parts.length < 2) return null;
@@ -47,8 +48,12 @@ export const generateProfessionalPhoto = async (
       },
     });
 
-    if (response.candidates && response.candidates[0].content.parts) {
-      for (const part of response.candidates[0].content.parts) {
+    // Perbaikan: Gunakan optional chaining (?.) untuk akses aman
+    const candidate = response.candidates?.[0];
+    const responseParts = candidate?.content?.parts;
+
+    if (responseParts && responseParts.length > 0) {
+      for (const part of responseParts) {
         if (part.inlineData) {
           return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
         }
