@@ -1,0 +1,7 @@
+{
+  "name": "Professional ID Card Creator AI",
+  "description": "A high-end ID card generator that uses Gemini AI to transform casual selfies into professional corporate headshots and place them into customizable, print-ready ID card templates.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
